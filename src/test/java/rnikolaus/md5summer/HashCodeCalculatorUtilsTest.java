@@ -6,6 +6,8 @@
 package rnikolaus.md5summer;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,7 +24,7 @@ public class HashCodeCalculatorUtilsTest {
     }
 
     @Test
-    public void testReadAndWrite() {
+    public void testReadAndWrite() throws IOException {
         Map<String, String> map = new TreeMap<>();
         for (String s : new String[]{"a", "b", "c", "stuff with spaces"}) {
             String code=(s + "code").replaceAll(" ", "_");
@@ -36,6 +38,7 @@ public class HashCodeCalculatorUtilsTest {
         for (String s:map.keySet()){
             assertEquals(map.get(s), result.get(s));
         }
+        Files.deleteIfExists(f.toPath());
     }
     
     @Test

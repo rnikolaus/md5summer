@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigInteger;
 import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -64,7 +66,9 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
     private  String calculateHash(final Path path) {
         try {
             md5Digest.reset();
-            try (BufferedInputStream is = new BufferedInputStream(new FileInputStream(path.toFile()))) {
+            try (BufferedInputStream is = 
+                    new BufferedInputStream(
+                            Files.newInputStream(path, StandardOpenOption.READ))) {
                 while (is.available() > 0) {
                     md5Digest.update(byteBuffer, 0, is.read(byteBuffer));
                 }

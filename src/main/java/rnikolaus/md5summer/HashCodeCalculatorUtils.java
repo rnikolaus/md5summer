@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -60,35 +64,46 @@ public class HashCodeCalculatorUtils {
     }
 
     public static void writeMap(Map<String, String> map, File f) {
-        BufferedWriter bf = null;
-        try {
-            bf = new BufferedWriter(new FileWriter(f));
-            for (Map.Entry<String, String> e : map.entrySet()) {
-                bf.append(e.getValue() + " " + e.getKey());
-                bf.newLine();
-            }
 
+        List<String> x = new ArrayList<>();
+        for (Map.Entry<String, String> e : map.entrySet()) {
+                final String name = e.getValue() + " " + e.getKey();
+                x.add(name);
+               
+            }
+//        BufferedWriter bf = null;
+//
+//        try {
+//            bf = new BufferedWriter(new FileWriter(f));
+//            for (String s:x){
+//                 bf.append(s);
+//                bf.newLine();
+//            }
+//
+//        } catch (IOException ex) {
+//            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            try {
+//                if (bf != null) {
+//                    bf.close();
+//                }
+//            } catch (IOException ex) {
+//                Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+
+        try {
+            Files.write(f.toPath(), x, StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (bf != null) {
-                    bf.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 
     public static Map<String, String> readMap(File file) {
         Map<String, String> result = new TreeMap<>();
-        BufferedReader br = null;
         try {
-
-            br = new BufferedReader(new FileReader(file));
-            while (br.ready()) {
-                String line = br.readLine();
+            List<String> lines = Files.readAllLines(file.toPath());
+            for (String line:lines){
                 StringTokenizer st = new StringTokenizer(line, " ");
                 if (st.countTokens() < 2) {
                     continue;
@@ -100,20 +115,40 @@ public class HashCodeCalculatorUtils {
                 }
                 result.put(name, hash);
             }
-            return result;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
+//        BufferedReader br = null;
+//        try {
+//
+//            br = new BufferedReader(new FileReader(file));
+//            while (br.ready()) {
+//                String line = br.readLine();
+//                StringTokenizer st = new StringTokenizer(line, " ");
+//                if (st.countTokens() < 2) {
+//                    continue;
+//                }
+//                String hash = st.nextToken();
+//                String name = st.nextToken();
+//                while (st.hasMoreTokens()) {
+//                    name += " " + st.nextToken();
+//                }
+//                result.put(name, hash);
+//            }
+//            return result;
+//        } catch (FileNotFoundException ex) {
+//            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            try {
+//                if (br != null) {
+//                    br.close();
+//                }
+//            } catch (IOException ex) {
+//                Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
         return result;
     }
 
