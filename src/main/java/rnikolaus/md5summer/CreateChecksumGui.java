@@ -33,39 +33,39 @@ public class CreateChecksumGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        directoryTextField = new javax.swing.JTextField();
+        directoryButton = new javax.swing.JButton();
+        resultTextField = new javax.swing.JTextField();
+        resultButton = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setEditable(false);
+        directoryTextField.setEditable(false);
 
-        jButton1.setText("Directory");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        directoryButton.setText("Directory");
+        directoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                directoryButtonActionPerformed(evt);
             }
         });
 
-        jTextField2.setEditable(false);
+        resultTextField.setEditable(false);
 
-        jButton2.setText("Result file");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        resultButton.setText("Result file");
+        resultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                resultButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Run");
-        jButton3.setEnabled(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        runButton.setText("Run");
+        runButton.setEnabled(false);
+        runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                runButtonActionPerformed(evt);
             }
         });
 
@@ -85,14 +85,14 @@ public class CreateChecksumGui extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                            .addComponent(jTextField1))
+                            .addComponent(resultTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                            .addComponent(directoryTextField))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(directoryButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(resultButton, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(runButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -100,13 +100,13 @@ public class CreateChecksumGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(directoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(directoryButton)
+                    .addComponent(runButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(resultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resultButton))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                 .addContainerGap())
@@ -115,20 +115,20 @@ public class CreateChecksumGui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void directoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directoryButtonActionPerformed
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file.exists()) {
-                jTextField1.setText(file.getAbsolutePath());
+                directoryTextField.setText(file.getAbsolutePath());
             }
         }
         checkRunButtonEnabled();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_directoryButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void resultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resultButtonActionPerformed
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter f = new FileNameExtensionFilter("MD5 Files", "md5");
@@ -143,28 +143,28 @@ public class CreateChecksumGui extends javax.swing.JFrame {
                 }
             }
             if (!file.exists()) {
-                jTextField2.setText(file.getAbsolutePath());
+                resultTextField.setText(file.getAbsolutePath());
             }else{
                 JOptionPane.showMessageDialog(this, "File "+file+"already exists", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         checkRunButtonEnabled();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_resultButtonActionPerformed
 
     private void checkRunButtonEnabled() {
-        String s1 = jTextField1.getText();
-        String s2 = jTextField2.getText();
+        String s1 = directoryTextField.getText();
+        String s2 = resultTextField.getText();
         if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()){
-            jButton3.setEnabled(true);
+            runButton.setEnabled(true);
         }else{
-            jButton3.setEnabled(false);
+            runButton.setEnabled(false);
         }
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jButton3.setEnabled(false);
-        String s1 = jTextField1.getText();
-        String s2 = jTextField2.getText();
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        runButton.setEnabled(false);
+        String s1 = directoryTextField.getText();
+        String s2 = resultTextField.getText();
 
         if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()) {
             final File f1 = new File(s1);
@@ -176,14 +176,14 @@ public class CreateChecksumGui extends javax.swing.JFrame {
                     jTextArea1.setText(null);
                     Map<String, String> result = HashCodeCalculatorUtils.getHashCodes(f1.toPath(), new TextAreaOutputStream(jTextArea1));
                     HashCodeCalculatorUtils.writeMap(result, f2);
-                    jTextField2.setText(null);
+                    resultTextField.setText(null);
                 }
             });
             t.start();
         }
         
 
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_runButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -221,12 +221,12 @@ public class CreateChecksumGui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton directoryButton;
+    private javax.swing.JTextField directoryTextField;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton resultButton;
+    private javax.swing.JTextField resultTextField;
+    private javax.swing.JButton runButton;
     // End of variables declaration//GEN-END:variables
 }

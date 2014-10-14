@@ -38,41 +38,41 @@ public class CompareChecksumGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        result1TextField = new javax.swing.JTextField();
+        result1Button = new javax.swing.JButton();
+        result2TextField = new javax.swing.JTextField();
+        result2Button = new javax.swing.JButton();
+        changedButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        addedButton = new javax.swing.JButton();
+        deletedButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setEditable(false);
+        result1TextField.setEditable(false);
 
-        jButton1.setText("Result 1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        result1Button.setText("Result 1");
+        result1Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                result1ButtonActionPerformed(evt);
             }
         });
 
-        jTextField2.setEditable(false);
+        result2TextField.setEditable(false);
 
-        jButton2.setText("Result 2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        result2Button.setText("Result 2");
+        result2Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                result2ButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Show changed");
-        jButton3.setEnabled(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        changedButton.setText("Show changed");
+        changedButton.setEnabled(false);
+        changedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                changedButtonActionPerformed(evt);
             }
         });
 
@@ -82,19 +82,19 @@ public class CompareChecksumGui extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jButton4.setText("Show added");
-        jButton4.setEnabled(false);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        addedButton.setText("Show added");
+        addedButton.setEnabled(false);
+        addedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                addedButtonActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Show deleted");
-        jButton5.setEnabled(false);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        deletedButton.setText("Show deleted");
+        deletedButton.setEnabled(false);
+        deletedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                deletedButtonActionPerformed(evt);
             }
         });
 
@@ -107,23 +107,23 @@ public class CompareChecksumGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(changedButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5)
+                        .addComponent(deletedButton)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4)
+                        .addComponent(addedButton)
                         .addGap(194, 194, 194))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(result1TextField)
+                            .addComponent(result2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(8, 8, 8)
-                                .addComponent(jButton1))
+                                .addComponent(result1Button))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)))))
+                                .addComponent(result2Button)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -131,19 +131,19 @@ public class CompareChecksumGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(result1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(result1Button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
+                            .addComponent(result2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(result2Button))
                         .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton5)))
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(changedButton)
+                            .addComponent(deletedButton)))
+                    .addComponent(addedButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                 .addContainerGap())
@@ -152,13 +152,13 @@ public class CompareChecksumGui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        handleFileButton(jTextField1);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void result1ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_result1ButtonActionPerformed
+        handleFileButton(result1TextField);
+    }//GEN-LAST:event_result1ButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        handleFileButton(jTextField2);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void result2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_result2ButtonActionPerformed
+        handleFileButton(result2TextField);
+    }//GEN-LAST:event_result2ButtonActionPerformed
 
     private void handleFileButton(JTextField textfield) throws HeadlessException {
         final JFileChooser fc = new JFileChooser();
@@ -178,23 +178,23 @@ public class CompareChecksumGui extends javax.swing.JFrame {
     }
 
     private void checkRunButtonEnabled() {
-        String s1 = jTextField1.getText();
-        String s2 = jTextField2.getText();
+        String s1 = result1TextField.getText();
+        String s2 = result2TextField.getText();
         if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()){
-            jButton3.setEnabled(true);
-            jButton4.setEnabled(true);
-            jButton5.setEnabled(true);
+            changedButton.setEnabled(true);
+            addedButton.setEnabled(true);
+            deletedButton.setEnabled(true);
             
         }else{
-            jButton3.setEnabled(false);
-            jButton4.setEnabled(false);
-            jButton5.setEnabled(false);
+            changedButton.setEnabled(false);
+            addedButton.setEnabled(false);
+            deletedButton.setEnabled(false);
             
         }
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jButton3.setEnabled(false);
+    private void changedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changedButtonActionPerformed
+        changedButton.setEnabled(false);
         loadResults();
         jTextArea1.setText(null);
         try (PrintStream out = new PrintStream(new TextAreaOutputStream(jTextArea1))) {
@@ -202,13 +202,13 @@ public class CompareChecksumGui extends javax.swing.JFrame {
                 out.println(e.getKey());
             }
         }
-        jButton3.setEnabled(true);
+        changedButton.setEnabled(true);
 
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_changedButtonActionPerformed
 
     private void loadResults() {
-        String s1 = jTextField1.getText();
-        String s2 = jTextField2.getText();
+        String s1 = result1TextField.getText();
+        String s2 = result2TextField.getText();
         
         if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()) {
             final File f1 = new File(s1);
@@ -224,8 +224,8 @@ public class CompareChecksumGui extends javax.swing.JFrame {
         }
     }
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jButton4.setEnabled(false);
+    private void addedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addedButtonActionPerformed
+        addedButton.setEnabled(false);
         loadResults();
         jTextArea1.setText(null);
         try (PrintStream out = new PrintStream(new TextAreaOutputStream(jTextArea1))) {
@@ -233,11 +233,11 @@ public class CompareChecksumGui extends javax.swing.JFrame {
                 out.println(e.getKey());
             }
         }
-        jButton4.setEnabled(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+        addedButton.setEnabled(true);
+    }//GEN-LAST:event_addedButtonActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        jButton5.setEnabled(false);
+    private void deletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletedButtonActionPerformed
+        deletedButton.setEnabled(false);
         loadResults();
         jTextArea1.setText(null);
         try (PrintStream out = new PrintStream(new TextAreaOutputStream(jTextArea1))) {
@@ -245,8 +245,8 @@ public class CompareChecksumGui extends javax.swing.JFrame {
                 out.println(e.getKey());
             }
         }
-        jButton5.setEnabled(true);
-    }//GEN-LAST:event_jButton5ActionPerformed
+        deletedButton.setEnabled(true);
+    }//GEN-LAST:event_deletedButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,14 +285,14 @@ public class CompareChecksumGui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton addedButton;
+    private javax.swing.JButton changedButton;
+    private javax.swing.JButton deletedButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton result1Button;
+    private javax.swing.JTextField result1TextField;
+    private javax.swing.JButton result2Button;
+    private javax.swing.JTextField result2TextField;
     // End of variables declaration//GEN-END:variables
 }
