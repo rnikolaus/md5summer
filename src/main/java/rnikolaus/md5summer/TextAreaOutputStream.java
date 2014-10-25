@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 public class TextAreaOutputStream extends OutputStream {
 
     private final JTextArea textArea;
-    private StringBuffer buffer = new StringBuffer();
+    private final StringBuffer buffer = new StringBuffer();
 
     public TextAreaOutputStream(JTextArea textArea) {
         this.textArea = textArea;

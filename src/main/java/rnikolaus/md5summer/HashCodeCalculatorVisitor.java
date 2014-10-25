@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rnikolaus.md5summer;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -74,11 +68,7 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
                 }
             }
             BigInteger bigInt = new BigInteger(1, md5Digest.digest());
-            StringBuilder sb = new StringBuilder(bigInt.toString(16));
-            while (sb.length() < 32) {
-                sb.insert(0, '0');
-            }
-            return sb.toString();
+            return String.format("%032x", bigInt);
         } catch ( IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
