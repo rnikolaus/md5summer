@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +36,18 @@ public class HashCodeCalculatorUtils {
             if (!dir.exists() || !dir.isDirectory()) {
                 throw new IllegalArgumentException("Value for <directory> is invalid");
             }
-            getHashCodes(dir.toPath());
+            getHashCodes(directory);
         }
     }
 
-    public static Map<String, String> getHashCodes(Path p) throws IOException {
+    public static Map<String, String> getHashCodes(String p) throws IOException {
         return getHashCodes(p, System.out);
 
     }
 
-    public static Map<String, String> getHashCodes(Path p, OutputStream os) {
+    public static Map<String, String> getHashCodes(String p, OutputStream os) {
         final PrintStream printStream = new PrintStream(os);
-        final HashCodeCalculatorVisitor hashCodeCalculator = new HashCodeCalculatorVisitor(p.normalize(), printStream);
+        final HashCodeCalculatorVisitor hashCodeCalculator = new HashCodeCalculatorVisitor(Paths.get(p).normalize(), printStream);
         try {
             Files.walkFileTree(hashCodeCalculator.getStartPath(), hashCodeCalculator);
         } catch (IOException ex) {
@@ -57,7 +58,7 @@ public class HashCodeCalculatorUtils {
 
     }
 
-    public static void writeMap(Map<String, String> map, File f) {
+    public static void writeMap(Map<String, String> map, Path f) {
 
         List<String> x = new ArrayList<>();
         for (Map.Entry<String, String> e : map.entrySet()) {
@@ -87,16 +88,16 @@ public class HashCodeCalculatorUtils {
 //        }
 
         try {
-            Files.write(f.toPath(), x, StandardOpenOption.CREATE_NEW);
+            Files.write(f, x, StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static Map<String, String> readMap(File file) {
+    public static Map<String, String> readMap(Path file) {
         Map<String, String> result = new TreeMap<>();
         try {
-            List<String> lines = Files.readAllLines(file.toPath());
+            List<String> lines = Files.readAllLines(file);
             for (String line:lines){
                 StringTokenizer st = new StringTokenizer(line, " ");
                 if (st.countTokens() < 2) {

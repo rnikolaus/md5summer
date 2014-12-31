@@ -6,6 +6,7 @@
 package rnikolaus.md5summer;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -163,19 +164,18 @@ public class CreateChecksumGui extends javax.swing.JFrame {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         runButton.setEnabled(false);
-        String s1 = directoryTextField.getText();
-        String s2 = resultTextField.getText();
+        final String s1 = directoryTextField.getText();
+        final String s2 = resultTextField.getText();
 
         if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()) {
-            final File f1 = new File(s1);
-            final File f2 = new File(s2);
+            
             Thread t = new Thread(new Runnable() {
 
                 @Override
                 public void run() {
                     jTextArea1.setText(null);
-                    Map<String, String> result = HashCodeCalculatorUtils.getHashCodes(f1.toPath(), new TextAreaOutputStream(jTextArea1));
-                    HashCodeCalculatorUtils.writeMap(result, f2);
+                    Map<String, String> result = HashCodeCalculatorUtils.getHashCodes(s1, new TextAreaOutputStream(jTextArea1));
+                    HashCodeCalculatorUtils.writeMap(result, Paths.get(s2));
                     resultTextField.setText(null);
                 }
             });

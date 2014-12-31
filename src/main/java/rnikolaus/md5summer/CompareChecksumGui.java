@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rnikolaus.md5summer;
 
 import java.awt.HeadlessException;
-import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -160,18 +157,18 @@ public class CompareChecksumGui extends javax.swing.JFrame {
         handleFileButton(result2TextField);
     }//GEN-LAST:event_result2ButtonActionPerformed
 
-    private void handleFileButton(JTextField textfield) throws HeadlessException {
+    private void handleFileButton(JTextField textfield)  {
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter f = new FileNameExtensionFilter("MD5 Files", "md5");
         fc.setFileFilter(f);
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            if (!file.exists()) {
+            Path file = fc.getSelectedFile().toPath();
+            if (!Files.exists(file)) {
                 JOptionPane.showMessageDialog(this, "File "+file+"doesn't exists", "Error", JOptionPane.ERROR_MESSAGE);
             }else{
-                textfield.setText(file.getAbsolutePath());
+                textfield.setText(file.toAbsolutePath().toString());
             }
         }
         checkRunButtonEnabled();
@@ -211,12 +208,11 @@ public class CompareChecksumGui extends javax.swing.JFrame {
         String s2 = result2TextField.getText();
         
         if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()) {
-            final File f1 = new File(s1);
-            final File f2 = new File(s2);
+            
             PrintStream out = new PrintStream(new TextAreaOutputStream(jTextArea1));
             try{
-                result1 = HashCodeCalculatorUtils.readMap(f1);
-                result2 = HashCodeCalculatorUtils.readMap(f2);
+                result1 = HashCodeCalculatorUtils.readMap(Paths.get(s1));
+                result2 = HashCodeCalculatorUtils.readMap(Paths.get(s2));
             }catch(Exception ex){
                 out.println(ex);
             }

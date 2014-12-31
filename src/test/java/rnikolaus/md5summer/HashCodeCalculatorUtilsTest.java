@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rnikolaus.md5summer;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Test;
@@ -31,14 +27,14 @@ public class HashCodeCalculatorUtilsTest {
             String path=s + "path"; 
             map.put(path,code);
         }
-        File f = new File("testfile");
-        HashCodeCalculatorUtils.writeMap(map, f);
-        Map<String,String> result = HashCodeCalculatorUtils.readMap(f);
+        Path p = Paths.get("testfile");
+        HashCodeCalculatorUtils.writeMap(map, p);
+        Map<String,String> result = HashCodeCalculatorUtils.readMap(p);
         assertEquals(map.size(), result.size());
         for (String s:map.keySet()){
             assertEquals(map.get(s), result.get(s));
         }
-        Files.deleteIfExists(f.toPath());
+        Files.deleteIfExists(p);
     }
     
     @Test
