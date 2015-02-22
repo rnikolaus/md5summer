@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rnikolaus.md5summer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -24,11 +20,20 @@ public class TextAreaOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        buffer.append(Character.toChars((b + 256) % 256));
-        if ((char) b == '\n') {
-            textArea.append(buffer.toString());
-            textArea.setCaretPosition(textArea.getDocument().getLength());
-            buffer.delete(0, buffer.length());
+        synchronized (buffer) {
+            buffer.append(Character.toChars((b + 256) % 256));
+            if ((char) b == '\n') {
+                final String toString = buffer.toString();
+                buffer.delete(0, buffer.length());
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        textArea.append(toString);
+                        textArea.setCaretPosition(textArea.getDocument().getLength());
+                    }
+                });
+            }
         }
     }
 

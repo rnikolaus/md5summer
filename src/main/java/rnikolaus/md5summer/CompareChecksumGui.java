@@ -1,6 +1,5 @@
 package rnikolaus.md5summer;
 
-import java.awt.HeadlessException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

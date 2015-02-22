@@ -25,51 +25,58 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
     private final TreeMap<String, String> result = new TreeMap<>();
     private final Path startPath;
     private final byte[] byteBuffer = new byte[1024 * 1024];
-     private final MessageDigest md5Digest;
+    private final MessageDigest md5Digest;
     private final PrintStream os;
     private boolean run = true;
 
     public HashCodeCalculatorVisitor(Path startPath, PrintStream os) {
         this.startPath = startPath;
-        this.os=os;
+        this.os = os;
         try {
-            md5Digest= MessageDigest.getInstance("MD5");
+            md5Digest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
         }
     }
+
     public Path getStartPath() {
         return startPath;
     }
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        if (!run)return FileVisitResult.TERMINATE;
+        if (!run) {
+            return FileVisitResult.TERMINATE;
+        }
         final String absolutePath = startPath.relativize(file).toString();
         try {
             String hash = calculateHash(file);
-            
-        if (os!=null)os.println(hash+" "+absolutePath);
+
+            if (os != null) {
+                os.println(hash + " " + absolutePath);
+            }
             result.put(absolutePath, hash);
         } catch (Exception ex) {
-             if (os!=null)os.println(ex);
+            if (os != null) {
+                os.println(ex);
+            }
         }
         return FileVisitResult.CONTINUE;
     }
 
-    private  String calculateHash(final Path path) {
+    private String calculateHash(final Path path) {
         try {
             md5Digest.reset();
-            try (BufferedInputStream is = 
-                    new BufferedInputStream(
+            try (BufferedInputStream is
+                    = new BufferedInputStream(
                             Files.newInputStream(path, StandardOpenOption.READ))) {
-                while (is.available() > 0) {
-                    md5Digest.update(byteBuffer, 0, is.read(byteBuffer));
-                }
-            }
-            BigInteger bigInt = new BigInteger(1, md5Digest.digest());
-            return String.format("%032x", bigInt);
-        } catch ( IOException ex) {
+                        while (is.available() > 0) {
+                            md5Digest.update(byteBuffer, 0, is.read(byteBuffer));
+                        }
+                    }
+                    BigInteger bigInt = new BigInteger(1, md5Digest.digest());
+                    return String.format("%032x", bigInt);
+        } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
@@ -81,12 +88,14 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
 
     @Override
     public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-         if (os!=null)os.println("Failed to access file: " + file);
+        if (os != null) {
+            os.println("Failed to access file: " + file);
+        }
         return FileVisitResult.CONTINUE;
     }
-    
-    public void stop(){
-        run=false;
+
+    public void stop() {
+        run = false;
     }
 
 }
