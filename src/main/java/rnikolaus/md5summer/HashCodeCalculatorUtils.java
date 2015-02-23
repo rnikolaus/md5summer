@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -88,7 +89,7 @@ public class HashCodeCalculatorUtils {
 //        }
 
         try {
-            Files.write(f, x, StandardOpenOption.CREATE_NEW);
+            Files.write(f, x,Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -97,7 +98,7 @@ public class HashCodeCalculatorUtils {
     public static Map<String, String> readMap(Path file) {
         Map<String, String> result = new TreeMap<>();
         try {
-            List<String> lines = Files.readAllLines(file);
+            List<String> lines = Files.readAllLines(file,Charset.defaultCharset());
             for (String line:lines){
                 StringTokenizer st = new StringTokenizer(line, " ");
                 if (st.countTokens() < 2) {

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -47,8 +49,10 @@ public class MainGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLayeredPane1 = new javax.swing.JLayeredPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         streamTextArea1 = new rnikolaus.md5summer.StreamTextArea();
+        jProgressBar1 = new javax.swing.JProgressBar();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         findChanged = new javax.swing.JMenuItem();
@@ -72,6 +76,29 @@ public class MainGui extends javax.swing.JFrame {
         streamTextArea1.setColumns(20);
         streamTextArea1.setRows(5);
         jScrollPane1.setViewportView(streamTextArea1);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGap(118, 118, 118)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(136, Short.MAX_VALUE))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(160, Short.MAX_VALUE))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
+        );
+        jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jProgressBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -178,11 +205,13 @@ public class MainGui extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLayeredPane1)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(jLayeredPane1)
         );
 
         pack();
@@ -203,7 +232,7 @@ public class MainGui extends javax.swing.JFrame {
             return;
         }
         try {
-            BufferedWriter bw = Files.newBufferedWriter(fc.getSelectedFile().toPath(), StandardOpenOption.CREATE_NEW);
+            BufferedWriter bw = Files.newBufferedWriter(fc.getSelectedFile().toPath(),Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
             bw.append(streamTextArea1.getText());
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
@@ -248,6 +277,8 @@ public class MainGui extends javax.swing.JFrame {
     }
 
     private void createChecksumsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createChecksumsMenuItemActionPerformed
+        jLayeredPane1.moveToFront(jProgressBar1);
+        jProgressBar1.setIndeterminate(true);
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = fc.showOpenDialog(this);
@@ -260,6 +291,13 @@ public class MainGui extends javax.swing.JFrame {
             public void run() {
                 calculateHashCodes(fc.getSelectedFile().toPath(), streamTextArea1.getOutputStream());
                 JOptionPane.showMessageDialog(streamTextArea1, "Md5 calculation finished, please consider saving the result");
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                       jLayeredPane1.moveToBack(jProgressBar1);
+                    }
+                });
             }
         });
         t.start();
@@ -310,7 +348,7 @@ public class MainGui extends javax.swing.JFrame {
     public Map<String, String> readMap(Path file) {
         Map<String, String> result = new TreeMap<>();
         try {
-            List<String> lines = Files.readAllLines(file);
+            List<String> lines = Files.readAllLines(file,Charset.defaultCharset());
             return parseHashes(lines);
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
@@ -344,7 +382,7 @@ public class MainGui extends javax.swing.JFrame {
         }
 
         try {
-            Files.write(f, x, StandardOpenOption.CREATE_NEW);
+            Files.write(f, x,Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -440,6 +478,8 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JMenuItem findChanged;
     private javax.swing.JMenuItem findDeleted;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuItem loadResultMenuItem;
     private javax.swing.JMenuBar menuBar;
