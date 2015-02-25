@@ -17,6 +17,7 @@ public class StreamTextArea extends JTextArea{
 
     public StreamTextArea() {
         outputStream = new TextAreaOutputStream(this);
+        this.setEditable(false);
     }
     public OutputStream getOutputStream(){
         return outputStream;

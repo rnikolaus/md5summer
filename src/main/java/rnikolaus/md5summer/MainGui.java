@@ -1,8 +1,6 @@
 package rnikolaus.md5summer;
 
-import java.awt.HeadlessException;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -253,7 +251,11 @@ public class MainGui extends javax.swing.JFrame {
         final Map<String, String> loadFromTextArea = loadFromTextArea();
         stopProcessing();
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null)displayResult(getChanged(readMap, loadFromTextArea));
+        if (readMap!=null){
+            ResultDialog dialog = new ResultDialog(this, true);
+            displayResult(dialog.getStreamTextArea(),getChanged(readMap, loadFromTextArea));
+            dialog.setVisible(true);
+        }
     }//GEN-LAST:event_findChangedActionPerformed
 
     /**
@@ -275,7 +277,8 @@ public class MainGui extends javax.swing.JFrame {
     }
 
     public Map<String, String> loadFromTextArea() {
-        StringTokenizer st = new StringTokenizer(streamTextArea1.getText(), "\n");
+        final String newline = System.getProperty("line.separator") ;
+        StringTokenizer st = new StringTokenizer(streamTextArea1.getText(), newline);
         List<String> lines = new ArrayList<>();
         while (st.hasMoreElements()){
             String line = st.nextToken();
@@ -299,7 +302,6 @@ public class MainGui extends javax.swing.JFrame {
             @Override
             public void run() {
                 calculateHashCodes(fc.getSelectedFile().toPath(), streamTextArea1.getOutputStream());
-                JOptionPane.showMessageDialog(streamTextArea1, "Md5 calculation finished, please consider saving the result");
                 SwingUtilities.invokeLater(new Runnable() {
 
                     @Override
@@ -316,28 +318,35 @@ public class MainGui extends javax.swing.JFrame {
     private void loadResultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultMenuItemActionPerformed
         stopProcessing();
         Map<String,String> stuff = loadMapFromFile();
-        if (stuff!=null)displayResult(stuff);
+        if (stuff!=null)displayResult(streamTextArea1,stuff);
 
     }//GEN-LAST:event_loadResultMenuItemActionPerformed
 
     private void findAddedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findAddedActionPerformed
-        final Map<String, String> loadFromTextArea = loadFromTextArea();
-        stopProcessing();
+        final Map<String, String> loadFromTextArea = loadFromTextArea();        
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null)displayResult(getCreated(readMap, loadFromTextArea));
+        if (readMap!=null){
+            ResultDialog dialog = new ResultDialog(this, true);
+            displayResult(dialog.getStreamTextArea(),getCreated(readMap, loadFromTextArea));
+            dialog.setVisible(true);
+        }
     }//GEN-LAST:event_findAddedActionPerformed
 
     private void findDeletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findDeletedActionPerformed
         final Map<String, String> loadFromTextArea = loadFromTextArea();
         stopProcessing();
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null)displayResult(getDeleted(readMap, loadFromTextArea));
+        if (readMap!=null){
+            ResultDialog dialog = new ResultDialog(this, true);
+            displayResult(dialog.getStreamTextArea(),getDeleted(readMap, loadFromTextArea));
+            dialog.setVisible(true);
+        }
     }//GEN-LAST:event_findDeletedActionPerformed
 
-    public void displayResult(final Map<String,String> fc) {
-        streamTextArea1.setText("");
-        PrintStream os = new PrintStream(streamTextArea1.getOutputStream());
-        for (Map.Entry<String, String> e : fc.entrySet()) {
+    public void displayResult(StreamTextArea res,final Map<String,String> result) {
+        res.setText("");
+        PrintStream os = new PrintStream(res.getOutputStream());
+        for (Map.Entry<String, String> e : result.entrySet()) {
             os.println(e.getValue()+ " " + e.getKey());
         }
     }
@@ -376,11 +385,11 @@ public class MainGui extends javax.swing.JFrame {
                 continue;
             }
             String hash = st.nextToken();
-            String name = st.nextToken();
+            String pathString = st.nextToken();
             while (st.hasMoreTokens()) {
-                name += " " + st.nextToken();
+                pathString += " " + st.nextToken();
             }
-            result.put(name, hash);
+            result.put(pathString, hash);
         }
         return result;
     }
