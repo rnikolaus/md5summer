@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author rapnik
  */
 public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
-
+    
     private final TreeMap<String, String> result = new TreeMap<>();
     private final Path startPath;
     private final byte[] byteBuffer = new byte[1024 * 1024];

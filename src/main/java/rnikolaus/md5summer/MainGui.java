@@ -50,9 +50,9 @@ public class MainGui extends javax.swing.JFrame {
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
-        jProgressBar1 = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         streamTextArea1 = new rnikolaus.md5summer.StreamTextArea();
+        jProgressBar1 = new javax.swing.JProgressBar();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         findChanged = new javax.swing.JMenuItem();
@@ -75,6 +75,7 @@ public class MainGui extends javax.swing.JFrame {
 
         streamTextArea1.setColumns(20);
         streamTextArea1.setRows(5);
+        streamTextArea1.setFont(new java.awt.Font("Consolas", 0, 10)); // NOI18N
         jScrollPane1.setViewportView(streamTextArea1);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
@@ -97,8 +98,8 @@ public class MainGui extends javax.swing.JFrame {
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
         );
-        jLayeredPane1.setLayer(jProgressBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jProgressBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -222,17 +223,24 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void saveToResultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveToResultMenuItemActionPerformed
-        stopProcessing();
+        //stopProcessing();
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter f = new FileNameExtensionFilter("MD5 Files", "md5");
         fc.setFileFilter(f);
-        int returnVal = fc.showOpenDialog(this);
+        int returnVal = fc.showSaveDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        try {
-            BufferedWriter bw = Files.newBufferedWriter(fc.getSelectedFile().toPath(),Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
+         Path fileToSave = fc.getSelectedFile().toPath();
+        final String pathString = fileToSave.toString();
+         if (!pathString.toLowerCase().endsWith(".md5")){
+             fileToSave = Paths.get(pathString+".md5" );
+         }
+        try (
+                BufferedWriter bw = Files.newBufferedWriter(fileToSave,Charset.defaultCharset(), 
+                        StandardOpenOption.CREATE_NEW);
+                ){
             bw.append(streamTextArea1.getText());
         } catch (IOException ex) {
             Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,9 +250,10 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_saveToResultMenuItemActionPerformed
 
     private void findChangedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findChangedActionPerformed
+        final Map<String, String> loadFromTextArea = loadFromTextArea();
         stopProcessing();
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null)displayResult(getChanged(readMap, loadFromTextArea()));
+        if (readMap!=null)displayResult(getChanged(readMap, loadFromTextArea));
     }//GEN-LAST:event_findChangedActionPerformed
 
     /**
@@ -277,14 +286,14 @@ public class MainGui extends javax.swing.JFrame {
     }
 
     private void createChecksumsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createChecksumsMenuItemActionPerformed
-        jLayeredPane1.moveToFront(jProgressBar1);
-        jProgressBar1.setIndeterminate(true);
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = fc.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
+        jLayeredPane1.moveToFront(jProgressBar1);
+        jProgressBar1.setIndeterminate(true);
         Thread t = new Thread(new Runnable() {
 
             @Override
@@ -312,21 +321,24 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_loadResultMenuItemActionPerformed
 
     private void findAddedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findAddedActionPerformed
+        final Map<String, String> loadFromTextArea = loadFromTextArea();
         stopProcessing();
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null)displayResult(getCreated(readMap, loadFromTextArea()));
+        if (readMap!=null)displayResult(getCreated(readMap, loadFromTextArea));
     }//GEN-LAST:event_findAddedActionPerformed
 
     private void findDeletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findDeletedActionPerformed
+        final Map<String, String> loadFromTextArea = loadFromTextArea();
         stopProcessing();
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null)displayResult(getDeleted(readMap, loadFromTextArea()));
+        if (readMap!=null)displayResult(getDeleted(readMap, loadFromTextArea));
     }//GEN-LAST:event_findDeletedActionPerformed
 
     public void displayResult(final Map<String,String> fc) {
+        streamTextArea1.setText("");
         PrintStream os = new PrintStream(streamTextArea1.getOutputStream());
         for (Map.Entry<String, String> e : fc.entrySet()) {
-            os.println(e.getKey() + " " + e.getValue());
+            os.println(e.getValue()+ " " + e.getKey());
         }
     }
 
@@ -424,7 +436,6 @@ public class MainGui extends javax.swing.JFrame {
     public void stopProcessing() {
         if (hashCodeCalculator != null) {
             hashCodeCalculator.stop();
-            streamTextArea1.setText("");
         }
     }
 
