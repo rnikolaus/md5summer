@@ -77,7 +77,7 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
                     BigInteger bigInt = new BigInteger(1, md5Digest.digest());
                     return String.format("%032x", bigInt);
         } catch (IOException ex) {
-            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HashCodeCalculatorVisitor.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
     }

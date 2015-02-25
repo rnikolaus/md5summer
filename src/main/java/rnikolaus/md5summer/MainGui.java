@@ -19,7 +19,6 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -53,18 +52,14 @@ public class MainGui extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        findChanged = new javax.swing.JMenuItem();
-        findAdded = new javax.swing.JMenuItem();
-        findDeleted = new javax.swing.JMenuItem();
         loadResultMenuItem = new javax.swing.JMenuItem();
         createChecksumsMenuItem = new javax.swing.JMenuItem();
         saveToResultMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
+        toolsMenu = new javax.swing.JMenu();
+        findChanged = new javax.swing.JMenuItem();
+        findAdded = new javax.swing.JMenuItem();
+        findDeleted = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -101,31 +96,6 @@ public class MainGui extends javax.swing.JFrame {
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
-
-        findChanged.setMnemonic('o');
-        findChanged.setText("Find changed");
-        findChanged.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findChangedActionPerformed(evt);
-            }
-        });
-        fileMenu.add(findChanged);
-
-        findAdded.setText("Find added");
-        findAdded.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findAddedActionPerformed(evt);
-            }
-        });
-        fileMenu.add(findAdded);
-
-        findDeleted.setText("Find deleted");
-        findDeleted.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findDeletedActionPerformed(evt);
-            }
-        });
-        fileMenu.add(findDeleted);
 
         loadResultMenuItem.setMnemonic('s');
         loadResultMenuItem.setText("Load result File");
@@ -164,26 +134,35 @@ public class MainGui extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
+        toolsMenu.setMnemonic('e');
+        toolsMenu.setText("Tools");
 
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
+        findChanged.setMnemonic('o');
+        findChanged.setText("Find changed");
+        findChanged.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findChangedActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(findChanged);
 
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
+        findAdded.setText("Find added");
+        findAdded.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findAddedActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(findAdded);
 
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
+        findDeleted.setText("Find deleted");
+        findDeleted.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findDeletedActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(findDeleted);
 
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
+        menuBar.add(toolsMenu);
 
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
@@ -241,7 +220,7 @@ public class MainGui extends javax.swing.JFrame {
                 ){
             bw.append(streamTextArea1.getText());
         } catch (IOException ex) {
-            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
@@ -359,7 +338,7 @@ public class MainGui extends javax.swing.JFrame {
         try {
             Files.walkFileTree(hashCodeCalculator.getStartPath(), hashCodeCalculator);
         } catch (IOException ex) {
-            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
             printStream.println(ex);
         }
         return hashCodeCalculator.getResult();
@@ -372,7 +351,7 @@ public class MainGui extends javax.swing.JFrame {
             List<String> lines = Files.readAllLines(file,Charset.defaultCharset());
             return parseHashes(lines);
         } catch (IOException ex) {
-            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
@@ -405,7 +384,7 @@ public class MainGui extends javax.swing.JFrame {
         try {
             Files.write(f, x,Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
-            Logger.getLogger(HashCodeCalculatorUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public static Map<String, String> getNonExistant(Map<String, String> m1, Map<String, String> m2) {
@@ -487,11 +466,7 @@ public class MainGui extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem contentsMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem createChecksumsMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem findAdded;
@@ -503,9 +478,9 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuItem loadResultMenuItem;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveToResultMenuItem;
     private rnikolaus.md5summer.StreamTextArea streamTextArea1;
+    private javax.swing.JMenu toolsMenu;
     // End of variables declaration//GEN-END:variables
 
 }
