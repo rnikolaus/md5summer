@@ -228,7 +228,7 @@ public class MainGui extends javax.swing.JFrame {
 
     private void findChangedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findChangedActionPerformed
         final Map<String, String> loadFromTextArea = loadFromTextArea();
-        stopProcessing();
+       
         Map<String, String> readMap = loadMapFromFile();
         if (readMap!=null){
             ResultDialog dialog = new ResultDialog(this, true);
@@ -281,14 +281,10 @@ public class MainGui extends javax.swing.JFrame {
             @Override
             public void run() {
                 calculateHashCodes(fc.getSelectedFile().toPath(), streamTextArea1.getOutputStream());
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                       jLayeredPane1.moveToBack(jProgressBar1);
-                    }
-                });
+                hideProgressbar();
             }
+
+            
         });
         t.start();
 
@@ -313,7 +309,7 @@ public class MainGui extends javax.swing.JFrame {
 
     private void findDeletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findDeletedActionPerformed
         final Map<String, String> loadFromTextArea = loadFromTextArea();
-        stopProcessing();
+        
         Map<String, String> readMap = loadMapFromFile();
         if (readMap!=null){
             ResultDialog dialog = new ResultDialog(this, true);
@@ -322,6 +318,15 @@ public class MainGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_findDeletedActionPerformed
 
+    public void hideProgressbar() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        jLayeredPane1.moveToBack(jProgressBar1);
+                        jProgressBar1.setIndeterminate(false);
+                    }
+                });
+            }
     public void displayResult(StreamTextArea res,final Map<String,String> result) {
         res.setText("");
         PrintStream os = new PrintStream(res.getOutputStream());
@@ -424,6 +429,7 @@ public class MainGui extends javax.swing.JFrame {
     public void stopProcessing() {
         if (hashCodeCalculator != null) {
             hashCodeCalculator.stop();
+            hideProgressbar();
         }
     }
 
