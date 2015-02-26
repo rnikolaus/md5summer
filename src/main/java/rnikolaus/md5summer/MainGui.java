@@ -216,7 +216,7 @@ public class MainGui extends javax.swing.JFrame {
             fileToSave = Paths.get(pathString + ".md5");
         }
         try (
-                BufferedWriter bw = Files.newBufferedWriter(fileToSave, Charset.defaultCharset(),
+                BufferedWriter bw = Files.newBufferedWriter(fileToSave, Charset.forName("UTF-8"),
                         StandardOpenOption.CREATE_NEW);) {
             bw.append(streamTextArea1.getText());
         } catch (IOException ex) {
@@ -275,8 +275,7 @@ public class MainGui extends javax.swing.JFrame {
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        jLayeredPane1.moveToFront(jProgressBar1);
-        jProgressBar1.setIndeterminate(true);
+        showProgressbar();
         Thread t = new Thread(new Runnable() {
 
             @Override
@@ -292,12 +291,19 @@ public class MainGui extends javax.swing.JFrame {
 
     }//GEN-LAST:event_createChecksumsMenuItemActionPerformed
 
+    public void showProgressbar() {
+        jLayeredPane1.moveToFront(jProgressBar1);
+        jProgressBar1.setIndeterminate(true);
+    }
+
     private void loadResultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultMenuItemActionPerformed
         stopProcessing();
+        showProgressbar();
         Map<String, String> stuff = loadMapFromFile();
         if (stuff != null) {
             displayResult(streamTextArea1, stuff);
         }
+        hideProgressbar();
 
     }//GEN-LAST:event_loadResultMenuItemActionPerformed
 
@@ -379,7 +385,7 @@ public class MainGui extends javax.swing.JFrame {
     public Map<String, String> readMap(Path file) {
         Map<String, String> result = new TreeMap<>();
         try {
-            List<String> lines = Files.readAllLines(file, Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(file, Charset.forName("UTF-8"));
             return parseHashes(lines);
         } catch (IOException ex) {
             Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
@@ -413,7 +419,7 @@ public class MainGui extends javax.swing.JFrame {
         }
 
         try {
-            Files.write(f, x, Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
+            Files.write(f, x, Charset.forName("UTF-8"), StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
         }
