@@ -12,6 +12,8 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +24,13 @@ import java.util.logging.Logger;
  */
 public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
     
-    private final TreeMap<String, String> result = new TreeMap<>();
+    //private final TreeMap<String, String> result = new TreeMap<>();
     private final Path startPath;
     private final byte[] byteBuffer = new byte[1024 * 1024];
     private final MessageDigest md5Digest;
     private final PrintStream os;
     private boolean run = true;
+    private List<Exception> exceptions = new ArrayList<>();
 
     public HashCodeCalculatorVisitor(Path startPath, PrintStream os) {
         this.startPath = startPath;
@@ -55,11 +58,9 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
             if (os != null) {
                 os.println(hash + " " + absolutePath);
             }
-            result.put(absolutePath, hash);
+            //result.put(absolutePath, hash);
         } catch (Exception ex) {
-            if (os != null) {
-                os.println(ex);
-            }
+            exceptions.add(ex);
         }
         return FileVisitResult.CONTINUE;
     }
@@ -82,15 +83,16 @@ public class HashCodeCalculatorVisitor extends SimpleFileVisitor<Path> {
         }
     }
 
-    public TreeMap<String, String> getResult() {
-        return result;
-    }
+//    public TreeMap<String, String> getResult() {
+//        return result;
+//    }
 
+    public List<Exception> getExceptions(){
+        return exceptions;
+    }
     @Override
     public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-        if (os != null) {
-            os.println("Failed to access file: " + file);
-        }
+        exceptions.add(exc);
         return FileVisitResult.CONTINUE;
     }
 

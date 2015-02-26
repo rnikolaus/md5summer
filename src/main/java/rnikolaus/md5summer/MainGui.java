@@ -19,6 +19,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -209,18 +210,18 @@ public class MainGui extends javax.swing.JFrame {
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
-         Path fileToSave = fc.getSelectedFile().toPath();
+        Path fileToSave = fc.getSelectedFile().toPath();
         final String pathString = fileToSave.toString();
-         if (!pathString.toLowerCase().endsWith(".md5")){
-             fileToSave = Paths.get(pathString+".md5" );
-         }
+        if (!pathString.toLowerCase().endsWith(".md5")) {
+            fileToSave = Paths.get(pathString + ".md5");
+        }
         try (
-                BufferedWriter bw = Files.newBufferedWriter(fileToSave,Charset.defaultCharset(), 
-                        StandardOpenOption.CREATE_NEW);
-                ){
+                BufferedWriter bw = Files.newBufferedWriter(fileToSave, Charset.defaultCharset(),
+                        StandardOpenOption.CREATE_NEW);) {
             bw.append(streamTextArea1.getText());
         } catch (IOException ex) {
             Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "Error", JOptionPane.ERROR_MESSAGE);
         }
 
 
@@ -228,18 +229,18 @@ public class MainGui extends javax.swing.JFrame {
 
     private void findChangedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findChangedActionPerformed
         final Map<String, String> loadFromTextArea = loadFromTextArea();
-       
+
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null){
+        if (readMap != null) {
             ResultDialog dialog = new ResultDialog(this, true);
-            displayResult(dialog.getStreamTextArea(),getChanged(readMap, loadFromTextArea));
+            displayResult(dialog.getStreamTextArea(), getChanged(readMap, loadFromTextArea));
             dialog.setVisible(true);
         }
     }//GEN-LAST:event_findChangedActionPerformed
 
     /**
      * displays a filechooser and loads the result into a map.
-     * 
+     *
      * @return a map or null if unsuccessful
      */
     public Map<String, String> loadMapFromFile() {
@@ -256,14 +257,14 @@ public class MainGui extends javax.swing.JFrame {
     }
 
     public Map<String, String> loadFromTextArea() {
-        final String newline = System.getProperty("line.separator") ;
+        final String newline = "\n"/*System.getProperty("line.separator")*/;
         StringTokenizer st = new StringTokenizer(streamTextArea1.getText(), newline);
         List<String> lines = new ArrayList<>();
-        while (st.hasMoreElements()){
+        while (st.hasMoreElements()) {
             String line = st.nextToken();
             lines.add(line);
         }
-        Map<String,String> newMap = parseHashes(lines);
+        Map<String, String> newMap = parseHashes(lines);
         return newMap;
     }
 
@@ -282,9 +283,10 @@ public class MainGui extends javax.swing.JFrame {
             public void run() {
                 calculateHashCodes(fc.getSelectedFile().toPath(), streamTextArea1.getOutputStream());
                 hideProgressbar();
+                displayExceptions();
+
             }
 
-            
         });
         t.start();
 
@@ -292,50 +294,73 @@ public class MainGui extends javax.swing.JFrame {
 
     private void loadResultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultMenuItemActionPerformed
         stopProcessing();
-        Map<String,String> stuff = loadMapFromFile();
-        if (stuff!=null)displayResult(streamTextArea1,stuff);
+        Map<String, String> stuff = loadMapFromFile();
+        if (stuff != null) {
+            displayResult(streamTextArea1, stuff);
+        }
 
     }//GEN-LAST:event_loadResultMenuItemActionPerformed
 
     private void findAddedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findAddedActionPerformed
-        final Map<String, String> loadFromTextArea = loadFromTextArea();        
+        final Map<String, String> loadFromTextArea = loadFromTextArea();
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null){
+        if (readMap != null) {
             ResultDialog dialog = new ResultDialog(this, true);
-            displayResult(dialog.getStreamTextArea(),getCreated(readMap, loadFromTextArea));
+            displayResult(dialog.getStreamTextArea(), getCreated(readMap, loadFromTextArea));
             dialog.setVisible(true);
         }
     }//GEN-LAST:event_findAddedActionPerformed
 
     private void findDeletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findDeletedActionPerformed
         final Map<String, String> loadFromTextArea = loadFromTextArea();
-        
+
         Map<String, String> readMap = loadMapFromFile();
-        if (readMap!=null){
+        if (readMap != null) {
             ResultDialog dialog = new ResultDialog(this, true);
-            displayResult(dialog.getStreamTextArea(),getDeleted(readMap, loadFromTextArea));
+            displayResult(dialog.getStreamTextArea(), getDeleted(readMap, loadFromTextArea));
             dialog.setVisible(true);
         }
     }//GEN-LAST:event_findDeletedActionPerformed
 
-    public void hideProgressbar() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        jLayeredPane1.moveToBack(jProgressBar1);
-                        jProgressBar1.setIndeterminate(false);
-                    }
-                });
+    public void displayExceptions() {
+        if (hashCodeCalculator == null) {
+            return;
+        }
+        final List<Exception> exceptions = hashCodeCalculator.getExceptions();
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                ResultDialog d = new ResultDialog(null, true);
+                PrintStream s = new PrintStream(d.getStreamTextArea().getOutputStream());
+                for (Exception ex : exceptions) {
+                    s.println(ex);
+                }
+                d.setVisible(true);
             }
-    public void displayResult(StreamTextArea res,final Map<String,String> result) {
+        });
+
+    }
+
+    public void hideProgressbar() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jLayeredPane1.moveToBack(jProgressBar1);
+                jProgressBar1.setIndeterminate(false);
+            }
+        });
+    }
+
+    public void displayResult(StreamTextArea res, final Map<String, String> result) {
         res.setText("");
         PrintStream os = new PrintStream(res.getOutputStream());
         for (Map.Entry<String, String> e : result.entrySet()) {
-            os.println(e.getValue()+ " " + e.getKey());
+            os.println(e.getValue() + " " + e.getKey());
         }
     }
 
-    public Map<String, String> calculateHashCodes(Path p, OutputStream os) {
+    public void calculateHashCodes(Path p, OutputStream os) {
         final PrintStream printStream = new PrintStream(os);
         stopProcessing();
         hashCodeCalculator = new HashCodeCalculatorVisitor(p, printStream);
@@ -344,16 +369,17 @@ public class MainGui extends javax.swing.JFrame {
             Files.walkFileTree(hashCodeCalculator.getStartPath(), hashCodeCalculator);
         } catch (IOException ex) {
             Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
-            printStream.println(ex);
+            JOptionPane.showMessageDialog(this, ex, "Error", JOptionPane.ERROR_MESSAGE);
+            //printStream.println(ex);
         }
-        return hashCodeCalculator.getResult();
 
+        //return hashCodeCalculator.getResult();
     }
 
     public Map<String, String> readMap(Path file) {
         Map<String, String> result = new TreeMap<>();
         try {
-            List<String> lines = Files.readAllLines(file,Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(file, Charset.defaultCharset());
             return parseHashes(lines);
         } catch (IOException ex) {
             Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
@@ -373,7 +399,7 @@ public class MainGui extends javax.swing.JFrame {
             while (st.hasMoreTokens()) {
                 pathString += " " + st.nextToken();
             }
-            result.put(pathString, hash);
+            result.put(pathString.trim(), hash.trim());
         }
         return result;
     }
@@ -387,11 +413,12 @@ public class MainGui extends javax.swing.JFrame {
         }
 
         try {
-            Files.write(f, x,Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
+            Files.write(f, x, Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
         } catch (IOException ex) {
             Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public static Map<String, String> getNonExistant(Map<String, String> m1, Map<String, String> m2) {
         Map<String, String> result = new TreeMap<>();
         Set<String> paths = new TreeSet<>(m1.keySet());
@@ -402,16 +429,16 @@ public class MainGui extends javax.swing.JFrame {
         return result;
     }
 
-    public  Map<String, String> getCreated(Map<String, String> oldMap, Map<String, String> newMap) {
+    public Map<String, String> getCreated(Map<String, String> oldMap, Map<String, String> newMap) {
         return getNonExistant(newMap, oldMap);
     }
 
-    public  Map<String, String> getDeleted(Map<String, String> oldMap, Map<String, String> newMap) {
+    public Map<String, String> getDeleted(Map<String, String> oldMap, Map<String, String> newMap) {
         return getNonExistant(oldMap, newMap);
 
     }
 
-    public  Map<String, String> getChanged(Map<String, String> oldMap, Map<String, String> newMap) {
+    public Map<String, String> getChanged(Map<String, String> oldMap, Map<String, String> newMap) {
         Map<String, String> result = new TreeMap<>();
         Set<String> paths = new TreeSet<>(oldMap.keySet());
         paths.retainAll(newMap.keySet());
@@ -424,7 +451,6 @@ public class MainGui extends javax.swing.JFrame {
         }
         return result;
     }
-
 
     public void stopProcessing() {
         if (hashCodeCalculator != null) {
