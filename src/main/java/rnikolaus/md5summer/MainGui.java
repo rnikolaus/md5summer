@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -299,11 +300,35 @@ public class MainGui extends javax.swing.JFrame {
     private void loadResultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultMenuItemActionPerformed
         stopProcessing();
         showProgressbar();
-        Map<String, String> stuff = loadMapFromFile();
-        if (stuff != null) {
-            displayResult(streamTextArea1, stuff);
-        }
-        hideProgressbar();
+        Thread t = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                final Map<String, String> stuff = loadMapFromFile();
+                
+                if (stuff != null) {
+                    try {
+                        SwingUtilities.invokeAndWait(new Runnable() {
+                            
+                            @Override
+                            public void run() {
+                                displayResult(streamTextArea1, stuff);
+                                
+                            }
+                        });
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvocationTargetException ex) {
+                        Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                hideProgressbar();
+
+            }
+        });
+        t.start();
+
 
     }//GEN-LAST:event_loadResultMenuItemActionPerformed
 
