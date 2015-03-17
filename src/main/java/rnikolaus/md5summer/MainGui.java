@@ -1,5 +1,6 @@
 package rnikolaus.md5summer;
 
+import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -233,7 +234,7 @@ public class MainGui extends javax.swing.JFrame {
 
         Map<String, String> readMap = loadMapFromFile();
         if (readMap != null) {
-            ResultDialog dialog = new ResultDialog(this, true);
+            ResultDialog dialog = new ResultDialog("Changed", this, false);
             displayResult(dialog.getStreamTextArea(), getChanged(readMap, loadFromTextArea));
             dialog.setVisible(true);
         }
@@ -277,6 +278,7 @@ public class MainGui extends javax.swing.JFrame {
             return;
         }
         showProgressbar();
+        streamTextArea1.reset();
         Thread t = new Thread(new Runnable() {
 
             @Override
@@ -293,6 +295,10 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_createChecksumsMenuItemActionPerformed
 
     public void showProgressbar() {
+        for (Component c : menuBar.getComponents()) {
+            c.setEnabled(false);
+        }
+        //menuBar.setEnabled(false);
         jLayeredPane1.moveToFront(jProgressBar1);
         jProgressBar1.setIndeterminate(true);
     }
@@ -305,15 +311,15 @@ public class MainGui extends javax.swing.JFrame {
             @Override
             public void run() {
                 final Map<String, String> stuff = loadMapFromFile();
-                
+
                 if (stuff != null) {
                     try {
                         SwingUtilities.invokeAndWait(new Runnable() {
-                            
+
                             @Override
                             public void run() {
                                 displayResult(streamTextArea1, stuff);
-                                
+
                             }
                         });
                     } catch (InterruptedException ex) {
@@ -321,7 +327,7 @@ public class MainGui extends javax.swing.JFrame {
                     } catch (InvocationTargetException ex) {
                         Logger.getLogger(MainGui.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                 }
                 hideProgressbar();
 
@@ -336,7 +342,7 @@ public class MainGui extends javax.swing.JFrame {
         final Map<String, String> loadFromTextArea = loadFromTextArea();
         Map<String, String> readMap = loadMapFromFile();
         if (readMap != null) {
-            ResultDialog dialog = new ResultDialog(this, true);
+            ResultDialog dialog = new ResultDialog("Added", this, false);
             displayResult(dialog.getStreamTextArea(), getCreated(readMap, loadFromTextArea));
             dialog.setVisible(true);
         }
@@ -347,7 +353,7 @@ public class MainGui extends javax.swing.JFrame {
 
         Map<String, String> readMap = loadMapFromFile();
         if (readMap != null) {
-            ResultDialog dialog = new ResultDialog(this, true);
+            ResultDialog dialog = new ResultDialog("Deleted", this, false);
             displayResult(dialog.getStreamTextArea(), getDeleted(readMap, loadFromTextArea));
             dialog.setVisible(true);
         }
@@ -358,18 +364,20 @@ public class MainGui extends javax.swing.JFrame {
             return;
         }
         final List<Exception> exceptions = hashCodeCalculator.getExceptions();
-        SwingUtilities.invokeLater(new Runnable() {
+        if (!exceptions.isEmpty()) {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            @Override
-            public void run() {
-                ResultDialog d = new ResultDialog(null, true);
-                PrintStream s = new PrintStream(d.getStreamTextArea().getOutputStream());
-                for (Exception ex : exceptions) {
-                    s.println(ex);
+                @Override
+                public void run() {
+                    ResultDialog d = new ResultDialog("Exceptions", null, true);
+                    PrintStream s = new PrintStream(d.getStreamTextArea().getOutputStream());
+                    for (Exception ex : exceptions) {
+                        s.println(ex);
+                    }
+                    d.setVisible(true);
                 }
-                d.setVisible(true);
-            }
-        });
+            });
+        }
 
     }
 
@@ -377,6 +385,10 @@ public class MainGui extends javax.swing.JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                for (Component c : menuBar.getComponents()) {
+                    c.setEnabled(true);
+                }
+                //menuBar.setEnabled(true);
                 jLayeredPane1.moveToBack(jProgressBar1);
                 jProgressBar1.setIndeterminate(false);
             }
@@ -384,7 +396,7 @@ public class MainGui extends javax.swing.JFrame {
     }
 
     public void displayResult(StreamTextArea res, final Map<String, String> result) {
-        res.setText("");
+        res.reset();
         PrintStream os = new PrintStream(res.getOutputStream());
         for (Map.Entry<String, String> e : result.entrySet()) {
             os.println(e.getValue() + " " + e.getKey());

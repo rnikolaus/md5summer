@@ -25,7 +25,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>rnikolaus.md5summer.HashCodeCalculatorUtils</mainClass>
+                            <mainClass>rnikolaus.md5summer.MainGui</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

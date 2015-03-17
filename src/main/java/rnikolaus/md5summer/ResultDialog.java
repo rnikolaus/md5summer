@@ -8,10 +8,14 @@ public class ResultDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form ResultDialog
+     * @param title
+     * @param parent
+     * @param modal
      */
-    public ResultDialog(java.awt.Frame parent, boolean modal) {
+    public ResultDialog(String title,java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setTitle(title);
     }
 
     /**
